@@ -19,3 +19,19 @@ users = [
         password="secret",
     )
 ]
+
+class UserLoginSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+def authenticate(data: UserLoginSchema):
+    for user in users:
+        if user.email == data.email and user.password == data.password:
+            return True
+        return False    
+
+JWT_SECRET = "secret"
+JWT_ALGORITHM = "HS256"
+
+def token_response(token: str):
+    return {"access_token": token}
