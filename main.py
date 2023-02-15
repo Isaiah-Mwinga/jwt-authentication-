@@ -7,3 +7,15 @@ from fastapi.openapi.docs import get_redoc_html
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr
+
+@dataclass
+class User:
+    email: EmailStr
+    password: str
+
+users = [
+    User(
+        email="john@doe",
+        password="secret",
+    )
+]
