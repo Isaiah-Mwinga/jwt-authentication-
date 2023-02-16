@@ -77,3 +77,11 @@ class AuthBearer(HTTPBearer):
         if payload:
             is_token_valid = True
         return is_token_valid
+
+app = FastAPI()
+
+@app.get("/docs", response_class=HTMLResponse, include_in_schema=False, dependencies=[Depends(JWTBearer())])
+def redoc_html(request: Request)-> HTMLResponse:
+    root_path = request.scope.get("root_path", "").rstrip("/")
+    openapi_url = root_path + "/openapi.json"
+    return get_redoc_html(openapi_url=openapi_url, title="API Docs")
