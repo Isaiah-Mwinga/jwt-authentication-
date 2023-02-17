@@ -96,3 +96,9 @@ def openapi(request: Request)-> JSONResponse:
             request.app.servers.insert(0,{"url": rooth_path})
             server_urls.add(rooth_path)
     return JSONResponse(request.app.openapi())
+
+@app.post("/login")
+async def user_login(user: UserLoginSchema = Body(...)):
+    if authenticate(user):
+        return sign_jwt(user.email)
+    raise HTTPException(status_code=401, detail="Invalid username or password")
