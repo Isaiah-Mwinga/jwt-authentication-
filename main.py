@@ -15,7 +15,7 @@ class User:
 
 users = [
     User(
-        email="john@doe",
+        email="john@gmail.com",
         password="secret",
     )
 ]
@@ -36,7 +36,7 @@ JWT_ALGORITHM = "HS256"
 def token_response(token: str):
     return {"access_token": token}
 
-def sign_jwt(user_id: str)-> dict(str, str):
+def sign_jwt(user_id: str)-> dict[str, str]:
     payload = {"user_id": user_id, "expires": time.time() + 600}
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
@@ -80,13 +80,13 @@ class AuthBearer(HTTPBearer):
 
 app = FastAPI()
 
-@app.get("/docs", response_class=HTMLResponse, include_in_schema=False, dependencies=[Depends(JWTBearer())])
+@app.get("/docs", response_class=HTMLResponse, include_in_schema=False, dependencies=[Depends(HTTPBearer())])
 def redoc_html(request: Request)-> HTMLResponse:
     root_path = request.scope.get("root_path", "").rstrip("/")
     openapi_url = root_path + "/openapi.json"
     return get_redoc_html(openapi_url=openapi_url, title="API Docs")
 
-@app.get("/openapi.json", response_class=HTMLResponse, include_in_schema=False, dependencies=[Depends(JWTBearer())])
+@app.get("/openapi.json", response_class=HTMLResponse, include_in_schema=False, dependencies=[Depends(HTTPBearer())])
 def openapi(request: Request)-> JSONResponse:
     urls = (server_data.get("url")for server_data in request.app.servers)
     server_urls = [url for url in urls if url]
